@@ -69,9 +69,26 @@ RSpec.describe 'Authenticatable', type: :feature do
   end
 
   describe 'User Has Multiple Emails' do
+    let(:user) { create_user }
+
+    context 'when there is not primary record' do
+      before { user.email = nil }
+      it { expect(user.email).not_to be_nil }
+    end
+
+    context 'when the primary record is not confirmed' do
+      before { user.primary_email_record.update!(confirmed_at: nil) }
+      it { expect(user.email).not_to be_nil }
+
+      context 'when there is a confirmed email' do
+        let(:new_email) { create_email(user) }
+        before { new_email.confirm }
+        it { expect(user.email).to eq new_email.email  }
+      end
+    end
+
     context 'when changing primary email' do
       it 'toggles and persists primary value for all emails' do
-        user = create_user
         second_email = create_email(user)
         third_email = create_email(user)
 

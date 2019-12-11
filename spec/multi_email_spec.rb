@@ -50,7 +50,7 @@ RSpec.describe 'Devise Mutil Email' do
 
       it 'deletes the only email address when assigning nil' do
         user.email = nil
-        expect(user.email).to eq(nil)
+        expect(user.primary_email_record).to eq(nil)
       end
     end
 

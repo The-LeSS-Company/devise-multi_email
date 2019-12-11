@@ -37,7 +37,13 @@ module Devise
 
         # Gets the primary email address of the user.
         def email
-          multi_email.primary_email_record.try(:email)
+          primary_or_confirmed_record.try(:email)
+        end
+
+        def primary_or_confirmed_record
+          primary = multi_email.primary_email_record
+          return primary if primary&.confirmed?
+          multi_email.confirmed_emails.first || primary
         end
 
         # Sets the default email address of the user.
