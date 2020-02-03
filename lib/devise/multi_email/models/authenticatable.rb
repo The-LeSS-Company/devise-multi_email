@@ -33,7 +33,7 @@ module Devise
           multi_email_association.include_module(EmailAuthenticatable)
         end
 
-        delegate :skip_confirmation!, to: Devise::MultiEmail.primary_email_method_name, allow_nil: false
+        delegate :skip_confirmation!, to: :primary_candidate_email_record, allow_nil: false
 
         # Gets the primary email address of the user.
         def email
@@ -43,7 +43,7 @@ module Devise
         def primary_or_confirmed_record
           primary = multi_email.primary_email_record
           return primary if primary&.confirmed?
-          multi_email.confirmed_emails.first || primary
+          multi_email.confirmed_emails.first || primary || multi_email.primary_candidate_email_record
         end
 
         # Sets the default email address of the user.

@@ -33,7 +33,8 @@ class CreateTables < BASE_CLASS
     create_table :emails do |t|
       t.integer :user_id, null: false
       t.string :email, null: false
-      t.boolean :primary, default: false, null: true
+      t.boolean :primary, default: false, null: false
+      t.boolean :primary_candidate, default: false, null: false
 
       ## Confirmable
       t.string   :confirmation_token

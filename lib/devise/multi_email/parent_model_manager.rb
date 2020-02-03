@@ -25,6 +25,10 @@ module Devise
       end
       alias_method Devise::MultiEmail.primary_email_method_name, :primary_email_record
 
+      def primary_candidate_email_record
+        filtered_emails.find(&:primary_candidate?)
+      end
+
       # :allow_unconfirmed option sets this email record to primary
       # :skip_confirmations option confirms this email record (without saving)
       # @see `set_primary_record_to`
@@ -37,7 +41,12 @@ module Devise
         else
           record = find_or_build_for_email(new_email)
 
-          if record.try(:confirmed?) || primary_email_record.nil? || options[:allow_unconfirmed]
+          unless record.primary?
+            record.primary_candidate = true
+            filtered_emails.each { |other| other.primary_candidate = (other.email == record.email) }
+          end
+
+          if record.try(:confirmed?) || options[:allow_unconfirmed]
             set_primary_record_to(record, options)
           end
         end

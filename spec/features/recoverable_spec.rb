@@ -34,7 +34,7 @@ RSpec.describe 'Recoverable', type: :feature do
         visit_new_password_path
 
         request_forgot_password do
-          fill_in 'user_email', with: user.email
+          fill_in 'user_email', with: user.emails.first.email
         end
 
         expect(current_path).to eq new_user_session_path

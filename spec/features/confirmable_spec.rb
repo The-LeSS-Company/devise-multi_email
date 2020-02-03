@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe 'Confirmable', type: :feature do
+
+  context 'a new user' do
+    it 'shows the error message' do
+      user = create_user(confirm: false)
+      expect(user.primary_email_record).to be_nil
+    end
+  end
+
   def visit_user_confirmation_with_token(confirmation_token)
     visit user_confirmation_path(confirmation_token: confirmation_token)
   end
@@ -12,7 +20,7 @@ RSpec.describe 'Confirmable', type: :feature do
     visit new_user_session_path
     click_link "Didn't receive confirmation instructions?"
 
-    fill_in 'user_email', with: user.email
+    fill_in 'user_email', with: user.emails.first.email
     click_button 'Resend confirmation instructions'
   end
 
@@ -28,7 +36,7 @@ RSpec.describe 'Confirmable', type: :feature do
   it 'is able to confirm the account when confirmation token is valid' do
     user = create_user(confirm: false, confirmation_sent_at: 2.days.ago)
     expect(user).not_to be_confirmed
-    visit_user_confirmation_with_token(user.primary_email_record.confirmation_token)
+    visit_user_confirmation_with_token(user.emails.first.confirmation_token)
 
     expect(page).to have_selector('div', text: 'Your email address has been successfully confirmed.')
     expect(current_path).to eq '/users/sign_in'
@@ -41,9 +49,11 @@ RSpec.describe 'Confirmable', type: :feature do
       it 'does not change primary email' do
         user = create_user
         first_email = user.primary_email_record
+        expect(first_email).not_to be_nil
         user.email = generate_email
 
         expect(user.primary_email_record.email).to eq(first_email.email)
+        expect(user.emails.count(&:primary?)).to eq(1)
       end
 
       it 'changes primary email if confirmed' do
@@ -100,7 +110,7 @@ RSpec.describe 'Confirmable', type: :feature do
         user = create_user(confirm: false)
         visit new_user_session_path
 
-        fill_in 'user_email', with: user.email
+        fill_in 'user_email', with: user.emails.first.email
         fill_in 'user_password', with: '12345678'
         click_button 'Log in'
 

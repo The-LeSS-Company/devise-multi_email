@@ -15,6 +15,14 @@ module Devise
         def confirmation_period_valid?
           primary? ? super : false
         end
+
+        def confirmed_at=(time)
+          if primary_candidate?
+            self.primary = true
+            self.primary_candidate = false
+          end
+          super
+        end
       end
     end
 
@@ -41,9 +49,12 @@ module Devise
         end
 
         # delegate before creating overriding methods
+        delegate :confirmed_at, :confirmed_at=, :confirmation_sent_at,
+          :confirmed?, :unconfirmed_email, to: Devise::MultiEmail.primary_email_method_name, allow_nil: true
+
         delegate :skip_confirmation!, :skip_confirmation_notification!, :skip_reconfirmation!, :confirmation_required?,
-                 :confirmation_token, :confirmed_at, :confirmed_at=, :confirmation_sent_at, :confirm, :confirmed?, :unconfirmed_email,
-                 :reconfirmation_required?, :pending_reconfirmation?, to: Devise::MultiEmail.primary_email_method_name, allow_nil: true
+                 :confirmation_token, :confirm, :unconfirmed_email,
+                 :reconfirmation_required?, :pending_reconfirmation?, to: :primary_candidate_email_record, allow_nil: true
 
         # In case email updates are being postponed, don't change anything
         # when the postpone feature tries to switch things back

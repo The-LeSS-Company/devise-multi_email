@@ -11,7 +11,7 @@ module RailsTestHelpers
         password_confirmation: options[:password] || '12345678',
         created_at: Time.now.utc
     )
-    user.primary_email_record.update_attribute(:confirmation_sent_at, options[:confirmation_sent_at]) if options[:confirmation_sent_at]
+    user.emails.first.update_attribute(:confirmation_sent_at, options[:confirmation_sent_at]) if options[:confirmation_sent_at]
     user.confirm unless options[:confirm] == false
     user
   end

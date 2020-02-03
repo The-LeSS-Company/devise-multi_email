@@ -15,7 +15,7 @@ RSpec.describe 'Registerable', type: :feature do
       expect(page).to have_selector('div', text: 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.')
 
       user = User.last
-      expect(user.email).to eq 'new_user@test.com'
+      expect(user.emails.first.email).to eq 'new_user@test.com'
       expect(user).not_to be_confirmed
     end
   end
