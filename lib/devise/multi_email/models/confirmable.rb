@@ -7,6 +7,7 @@ module Devise
 
       included do
         devise :confirmable
+        validate :email_not_changed_if_confirmed
 
         include ConfirmableExtensions
       end
@@ -22,6 +23,12 @@ module Devise
             self.primary_candidate = false
           end
           super
+        end
+
+        def email_not_changed_if_confirmed
+          if email_changed? && confirmed? && self.persisted?
+            errors.add(:email, "Change of email when it's confirmed is not allowed!")
+          end
         end
       end
     end
