@@ -63,10 +63,10 @@ module Devise
         end
 
         # delegate before creating overriding methods
-        delegate :confirmed_at, :confirmed_at=, :confirmation_sent_at,
-          :confirmed?, :unconfirmed_email, to: Devise::MultiEmail.primary_email_method_name, allow_nil: true
+        delegate :confirmed_at, :confirmed_at=,
+                 :confirmed?, :unconfirmed_email, to: Devise::MultiEmail.primary_email_method_name, allow_nil: true
 
-        delegate :skip_confirmation!, :skip_confirmation_notification!, :skip_reconfirmation!, :confirmation_required?,
+        delegate :confirmation_sent_at, :skip_confirmation!, :skip_confirmation_notification!, :skip_reconfirmation!, :confirmation_required?,
                  :confirmation_token, :confirm, :unconfirmed_email,
                  :reconfirmation_required?, :pending_reconfirmation?, to: :primary_candidate_email_record, allow_nil: true
 
