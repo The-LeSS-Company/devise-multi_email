@@ -17,10 +17,17 @@ module Devise
           primary? ? super : false
         end
 
-        def confirmed_at=(time)
+        def skip_confirmation!
+          super
+          after_confirmation
+        end
+
+        # callback provided by devise::confirmable
+        def after_confirmation
           if primary_candidate?
-            self.primary = true
             self.primary_candidate = false
+            user.email = email
+            user.save!
           end
           super
         end

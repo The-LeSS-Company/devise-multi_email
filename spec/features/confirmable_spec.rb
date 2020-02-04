@@ -44,6 +44,31 @@ RSpec.describe 'Confirmable', type: :feature do
     expect(user.primary_email_record).to be_confirmed
   end
 
+  describe 'primary candidate' do
+    let(:user) { create_user }
+    let(:candidate) { create_email(user, primary_candidate: true, confirm: false) }
+
+    it 'it wont change the primary email' do
+      expect { candidate }.not_to change(user, :email)
+    end
+
+    it 'can be confirmed' do
+      visit_user_confirmation_with_token(candidate.confirmation_token)
+      expect(page).to have_selector('div', text: 'Your email address has been successfully confirmed.')
+      expect(candidate.reload).to be_confirmed
+    end
+
+    it 'it change the primary email when confirmed' do
+      candidate.confirm
+      expect(user.reload.email).to eq candidate.email
+    end
+
+    it 'should remove the candidate' do
+      candidate.confirm
+      expect(user.reload.primary_candidate_email_record).to be_nil
+    end
+  end
+
   describe '#email=' do
     context 'when unconfirmed access is disallowed' do
       it 'does not change primary email' do

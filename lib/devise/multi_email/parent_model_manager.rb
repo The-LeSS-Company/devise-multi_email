@@ -41,13 +41,11 @@ module Devise
         else
           record = find_or_build_for_email(new_email)
 
-          unless record.primary?
-            record.primary_candidate = true
-            filtered_emails.each { |other| other.primary_candidate = (other.email == record.email) }
-          end
-
           if record.try(:confirmed?) || options[:allow_unconfirmed]
             set_primary_record_to(record, options)
+          else
+            record.primary_candidate = true
+            filtered_emails.each { |other| other.primary_candidate = (other.email == record.email) }
           end
         end
 

@@ -22,6 +22,7 @@ module RailsTestHelpers
 
     email = user.emails.to_a.find { |record| record.email == email_address }
     email.update_attribute(:confirmation_sent_at, options[:confirmation_sent_at]) if options[:confirmation_sent_at]
+    email.update_attribute(:primary_candidate, options[:primary_candidate]) if options[:primary_candidate]
 
     if options[:confirm] == false
       user.save
