@@ -67,7 +67,7 @@ module Devise
                  :confirmed?, :unconfirmed_email, to: Devise::MultiEmail.primary_email_method_name, allow_nil: true
 
         delegate :confirmation_sent_at, :skip_confirmation!, :skip_confirmation_notification!, :skip_reconfirmation!, :confirmation_required?,
-                 :confirmation_token, :confirm, :unconfirmed_email,
+                 :confirmation_token, :confirm,
                  :reconfirmation_required?, :pending_reconfirmation?, to: :primary_candidate_email_record, allow_nil: true
 
         # In case email updates are being postponed, don't change anything

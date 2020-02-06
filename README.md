@@ -100,6 +100,9 @@ team = email.team
 
 ## Confirmable with multiple emails
 
+**reconfirmable** should be set to false. Having mulitple emails with
+every email keeps an unconfirmed_email could be very confusing.
+
 Sending separate confirmations to each email is supported. What you need to do is:
 
 Declare `devise :multi_email_confirmable` in your `User` model:
@@ -122,7 +125,6 @@ create_table :emails do |t|
   t.boolean :primary, default: false
 
   ## Confirmable
-  t.string :unconfirmed_email
   t.string :confirmation_token
   t.datetime :confirmed_at
   t.datetime :confirmation_sent_at

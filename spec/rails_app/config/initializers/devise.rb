@@ -1,6 +1,9 @@
 # Use this hook to configure devise mailer, warden hooks and so forth. The first
 # four configuration values can also be set straight in your models.
 Devise.setup do |config|
+  # with multiple emails, the reconfirmable should be off all the tiime
+  config.reconfirmable = false
+
   config.secret_key = "d9eb5171c59a4c817f68b0de27b8c1e340c2341b52cdbc60d3083d4e8958532" \
                       "18dcc5f589cafde048faec956b61f864b9b5513ff9ce29bf9e5d58b0f234f8e3b"
 
