@@ -63,12 +63,12 @@ module Devise
         end
 
         # delegate before creating overriding methods
-        delegate :confirmed_at, :confirmed_at=,
-                 :confirmed?, :unconfirmed_email, to: Devise::MultiEmail.primary_email_method_name, allow_nil: true
+        delegate :confirmed_at, :confirmed?,
+          to: Devise::MultiEmail.primary_email_method_name, allow_nil: true
 
-        delegate :confirmation_sent_at, :skip_confirmation!, :skip_confirmation_notification!, :skip_reconfirmation!, :confirmation_required?,
+        delegate :confirmation_sent_at, :skip_confirmation!, :skip_confirmation_notification!, :confirmation_required?,
                  :confirmation_token, :confirm,
-                 :reconfirmation_required?, :pending_reconfirmation?, to: :primary_candidate_email_record, allow_nil: true
+                 to: :primary_candidate_email_record, allow_nil: true
 
         # In case email updates are being postponed, don't change anything
         # when the postpone feature tries to switch things back
