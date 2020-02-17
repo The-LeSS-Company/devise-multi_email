@@ -14,6 +14,14 @@ module Devise
 
       delegate Devise::MultiEmail.primary_email_method_name, :primary_candidate_email_record, to: :multi_email, allow_nil: false
 
+
+      # silent these two list to avoid unnecessary assignments
+      def downcase_keys
+      end
+
+      def strip_whitespace
+      end
+
       def multi_email
         @multi_email ||= ParentModelManager.new(self)
       end
