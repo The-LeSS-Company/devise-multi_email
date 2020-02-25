@@ -26,7 +26,7 @@ module Devise
         def after_confirmation
           if primary_candidate?
             self.primary_candidate = false
-            user.email = email
+            user.multi_email.set_primary_record_to(self)
             user.save!
           end
           super

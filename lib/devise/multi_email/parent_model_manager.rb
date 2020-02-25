@@ -80,8 +80,6 @@ module Devise
         filtered_emails.reject { |record| record.try(:confirmed?) }
       end
 
-    protected
-
       # :skip_confirmations option confirms this email record (without saving)
       def set_primary_record_to(record, options = {})
         # Toggle primary flag for all emails
