@@ -83,7 +83,10 @@ module Devise
       # :skip_confirmations option confirms this email record (without saving)
       def set_primary_record_to(record, options = {})
         # Toggle primary flag for all emails
-        filtered_emails.each { |other| other.primary = (other.email == record.email) }
+        filtered_emails.each do |other|
+          other.primary = (other.email == record.email)
+          other.primary_candidate = false
+        end
 
         if options[:skip_confirmations]
           record.try(:skip_confirmation!)
