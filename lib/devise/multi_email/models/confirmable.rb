@@ -24,7 +24,7 @@ module Devise
 
         # callback provided by devise::confirmable
         def after_confirmation
-          if primary_candidate?
+          if primary_candidate? && !primary?
             self.primary_candidate = false
             user.multi_email.set_primary_record_to(self)
             user.save!
