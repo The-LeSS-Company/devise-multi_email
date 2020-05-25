@@ -47,6 +47,7 @@ RSpec.describe 'Confirmable', type: :feature do
   describe 'primary candidate' do
     let(:user) { create_user }
     let(:candidate) { create_email(user, primary_candidate: true, confirm: false) }
+    let(:unsaved_candidate) { user.multi_email.find_or_build_for_email('e@mail.com').tap {|x| x.assign_attributes(primary_candidate: true)} }
 
     it 'it wont change the primary email' do
       expect { candidate }.not_to change(user, :email)
@@ -61,6 +62,15 @@ RSpec.describe 'Confirmable', type: :feature do
     it 'it change the primary email when confirmed' do
       candidate.confirm
       expect(user.reload.email).to eq candidate.email
+    end
+
+    it 'it should not send email when skip confirmation' do
+      unsaved_candidate
+      user.primary_email_record.update_attribute(:primary_candidate, true)
+      p "start"
+      ActionMailer::Base.deliveries.clear
+      user.primary_email_record.skip_confirmation!
+      expect(ActionMailer::Base.deliveries.size).to eq 0
     end
 
     it 'should remove the candidate' do
