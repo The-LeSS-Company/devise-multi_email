@@ -27,7 +27,7 @@ module Devise
           if primary_candidate? && !primary?
             self.primary_candidate = false
             user.multi_email.set_primary_record_to(self)
-            user.save!
+            user.save
           end
           super
         end
